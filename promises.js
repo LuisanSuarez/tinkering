@@ -11,16 +11,16 @@ var data = server.get('/promise', (req, res) => {
     var prom  = axios
     .get("https://jsonplaceholder.typicode.com/todos/1")
 
-    // console.log("1");
-    // console.log(prom);
-    // prom
-    //     .then(res => console.log("ONE:", res.data))
-    //     .catch(err => console.log(err))
-    // console.log("2");
-    // prom
-    //     .then(res => console.log("TWO:", res.data))
-    //     .catch(err => console.log(err))
-    // console.log("3");
+    console.log("1");
+    console.log(prom);
+    prom
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err))
+    console.log("2");
+    prom
+        .then(res => console.log(res.data))
+        .catch(err => console.log(err))
+    console.log("3");
     //Notice that log will be
         // 1
         // Promise { <pending> }
@@ -30,20 +30,13 @@ var data = server.get('/promise', (req, res) => {
         // (actual promise data here)
 
 
-async function getPromise() {
-    console.log("\n\nASYNC func");
-    let promzz = await axios.get("https://jsonplaceholder.typicode.com/todos/2");
-    console.log("THREE:", promzz.data);
-    console.log("ASYNC func end\n\n");
-    return "esto"
-}
-
-let esto =  getPromise();
-console.log("\n\nESTO");
-esto.then(response => {
-    console.log(response);
-})
-console.log("ESTO END\n\n");
+// async function getPromise() {
+//     console.log("\n\nasync func");
+//     let promzz = await axios.get("https://jsonplaceholder.typicode.com/todos/2")
+//     console.log(promzz.data);
+//     console.log("async func end\n\n");
+//     return promzz.data
+// }
 
 // var test =  getPromise();
 // console.log("~~~~~~~~~~~~test\n\n\n\n");
@@ -56,22 +49,22 @@ console.log("ESTO END\n\n");
         //you'll notice if you console.log() it out before it's resolved,
         //you'll get Promise { <pending> } back.
     // This is how you access data from a promise. This works
-    // setTimeout(function() {
-    //     // console.log("\n\n\n\n\n");
-    //     // console.log("###############\n\n\n\n\n###############\n", 
-    //     prom.then( gri => {
-    //         console.log("\n\nA");
-    //         console.log(gri.data);
-    //         console.log("B\n\n");
-    //     })
-    // }, 1000)
+    setTimeout(function() {
+        // console.log("\n\n\n\n\n");
+        // console.log("###############\n\n\n\n\n###############\n", 
+        prom.then( gri => {
+            console.log("\n\nA");
+            console.log(gri.data);
+            console.log("B");
+        })
+    }, 1000)
 
-    // // This is NOT how you access data from a promise. This DOESN'T works
+    // This is NOT how you access data from a promise. This DOESN'T works
 
-    // setTimeout(function() {
-    //     // console.log("\n\n\n\n\n");
-    //     console.log("**************\n\n\n\n\n**************\n", prom.data)
-    // }, 3000)
+    setTimeout(function() {
+        // console.log("\n\n\n\n\n");
+        console.log("**************\n\n\n\n\n**************\n", prom.data)
+    }, 3000)
 })
 
 console.log("\n\n\nData end");
