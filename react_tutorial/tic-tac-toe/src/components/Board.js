@@ -10,7 +10,8 @@ class Board extends React.Component {
       move: 0,
       history: [{ squares: Array(9).fill(null), xIsNext: true }],
       xSquares: [],
-      ySquares: [],
+      oSquares: [],
+      winner: null,
       wins: [
         [0, 1, 2],
         [3, 4, 5],
@@ -21,46 +22,32 @@ class Board extends React.Component {
         [0, 4, 8],
         [2, 4, 6],
       ],
-      winner: null,
     };
 
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(i) {
-    console.log(" props!:", i, this.state);
+    if (this.state.winner) {
+      return;
+    }
     let squares = this.state.squares.slice();
     squares[i] = this.state.xIsNext ? "X" : "O";
     let xSquares = this.state.xSquares.slice();
-    let ySquares = this.state.ySquares.slice();
-    this.state.xIsNext ? xSquares.push(i) : ySquares.push(i);
-    let Winner = null;
+    let oSquares = this.state.oSquares.slice();
+    this.state.xIsNext ? xSquares.push(i) : oSquares.push(i);
+    let finalWinner = null;
     let winner = this.state.winner;
 
     this.state.wins.forEach((winCombo) => {
-      let winner;
-      if (this.state.xIsNext && xSquares.length > 2) {
-        console.log({ winCombo, xSquares: this.state.xSquares });
-        winner = "X";
-        this.state.xSquares.forEach((number) => {
-          if (!winCombo.includes(number)) {
-            console.log("NEVER runs, really");
-            winner = null;
-          }
-        });
-      } else if (ySquares.length > 2) {
-        winner = "Y";
-        this.state.ySquares.forEach((number) => {
-          if (!winCombo.includes(number)) {
-            winner = null;
-          }
-        });
+      if (winCombo.every((value) => xSquares.includes(value))) {
+        finalWinner = "X";
       }
-      if (winner) {
-        Winner = winner;
+      if (winCombo.every((value) => oSquares.includes(value))) {
+        finalWinner = "O";
       }
     });
-    winner = Winner;
+    winner = finalWinner;
     let xIsNext = !this.state.xIsNext;
     let history = this.state.history.slice(0, this.state.move + 1);
     let move = this.state.move + 1;
@@ -70,19 +57,20 @@ class Board extends React.Component {
       move,
       history,
       xSquares,
-      ySquares,
+      oSquares,
       winner,
-      history: [...history, { squares, xIsNext, xSquares, ySquares, winner }],
+      history: [...history, { squares, xIsNext, xSquares, oSquares, winner }],
     });
   }
 
   goBack(i) {
     let squares = this.state.history[i].squares.slice();
     let xIsNext = this.state.history[i].xIsNext;
-    let history = this.state.history.slice();
+    let xSquares = this.state.history[i].xSquares.slice();
+    let oSquares = this.state.history[i].oSquares.slice();
+    let winner = this.state.history[i].winner;
     let move = i;
-    // history.splice(++i);
-    this.setState({ squares, xIsNext, move, history });
+    this.setState({ squares, xIsNext, xSquares, oSquares, move, winner });
   }
 
   render() {
@@ -152,6 +140,11 @@ class Board extends React.Component {
             )
           )}
         </div>
+        {this.state.winner ? (
+          <div>{`${this.state.winner} won the game!`}</div>
+        ) : (
+          ""
+        )}
       </>
     );
   }
